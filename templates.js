@@ -151,14 +151,14 @@ function trialExpiry(email, fullName, daysLeft) {
   const expired = daysLeft === 0;
   return {
     subject:   expired ? 'Your ValCrown trial has ended' : `Your ValCrown trial ends in ${daysLeft} day${daysLeft===1?'':'s'}`,
-    preheader: expired ? 'Upgrade now to keep all your boosts and AI features' : `${daysLeft} day${daysLeft===1?'':'s'} left — upgrade to keep ValCrown`,
+    preheader: expired ? 'Upgrade now to keep all your boosts and optimizations' : `${daysLeft} day${daysLeft===1?'':'s'} left — upgrade to keep ValCrown`,
     html: base({
-      preheader: expired ? 'Upgrade now to keep all your boosts and AI features' : `${daysLeft} day${daysLeft===1?'':'s'} left`,
+      preheader: expired ? 'Upgrade now to keep all your boosts and optimizations' : `${daysLeft} day${daysLeft===1?'':'s'} left`,
       content: `
         <h1>${expired ? 'Your trial has ended' : `Trial ends in ${daysLeft} day${daysLeft===1?'':'s'}`}</h1>
         <p>Hi ${fullName || 'there'},</p>
         <p>${expired
-          ? 'Your ValCrown free trial has ended. Upgrade to keep your game boosts, AI advisor, and network optimizer.'
+          ? 'Your ValCrown free trial has ended. Upgrade to keep your game boosts, network optimizer, and all premium features.'
           : `Your ValCrown free trial ends in <strong style="color:#ffb800">${daysLeft} day${daysLeft===1?'':'s'}</strong>. Don't lose your boosts — upgrade now to keep everything.`
         }</p>
         <a href="https://valcrown.com/pricing.html" class="btn">Upgrade Now →</a>
@@ -192,4 +192,4 @@ function ticketConfirmation(name, ticketId, ticketSubject) {
   };
 }
 
-module.exports = { resetPassword, welcome, licenseKey, trialExpiry, ticketConfirmation };
+module.exports = { resetPassword, welcome, licenseKey, trialExpiry, ticketConfirmation, ticketReply };
