@@ -63,6 +63,45 @@ function queueMail(id, opts) {
   return { success: true, queued: true, id };
 }
 
+
+app.post('/send/ticket-reply', auth, async (req, res) => {
+  try {
+    const { email, name, ticketId, subject, reply } = req.body;
+    if (!email || !reply) return res.status(400).json({ error: 'email and reply required' });
+    const tpl = templates.ticketReply(name || '', ticketId || '', subject || 'Support Request', reply);
+    res.json(queueMail('ticket-reply-' + Date.now(), { to: email, subject: tpl.subject, html: tpl.html, text: tpl.text }));
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
+
+app.post('/send/custom', auth, async (req, res) => {
+  try {
+    const { to, subject, message, from_name } = req.body;
+    if (!to || !subject || !message) return res.status(400).json({ error: 'to, subject and message required' });
+    const html = `<!DOCTYPE html><html><body style="margin:0;padding:0;background:#07070f;font-family:'DM Sans',Arial,sans-serif">
+<div style="max-width:560px;margin:0 auto;padding:32px 16px">
+  <div style="background:#0e0e1c;border:1px solid #1c1c38;border-radius:14px;overflow:hidden">
+    <div style="background:linear-gradient(135deg,#7c6aff,#5549cc);padding:24px 28px">
+      <div style="color:#fff;font-weight:800;font-size:18px">ValCrown</div>
+      <div style="color:rgba(255,255,255,0.7);font-size:12px">Message from ${from_name || 'ValCrown Team'}</div>
+    </div>
+    <div style="padding:28px">
+      <div style="color:#f0f0ff;font-size:14px;line-height:1.8;white-space:pre-wrap">${message}</div>
+    </div>
+    <div style="padding:16px 28px;border-top:1px solid #1c1c38;text-align:center">
+      <p style="color:#5a5a80;font-size:11px;margin:0">ValCrown by XOGAMESLTD · <a href="https://valcrown.com" style="color:#7c6aff;text-decoration:none">valcrown.com</a></p>
+    </div>
+  </div>
+</div></body></html>`;
+    const text = message;
+    res.json(queueMail('custom-' + Date.now(), { to, subject, html, text }));
+  } catch(e) {
+    res.status(500).json({ error: e.message });
+  }
+});
+
 app.get('/health', async (req, res) => {
   try {
     await getTransport().verify();
