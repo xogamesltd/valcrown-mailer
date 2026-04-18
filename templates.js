@@ -192,4 +192,31 @@ function ticketConfirmation(name, ticketId, ticketSubject) {
   };
 }
 
+
+function ticketReply(name, ticketId, subject, reply) {
+  return {
+    subject: 'Re: [#' + String(ticketId).slice(0,8) + '] ' + subject,
+    html: base({
+      preheader: 'Your support ticket has been answered',
+      content: `
+        <h1>We replied to your ticket ✓</h1>
+        <p>Hi ${name || 'there'},</p>
+        <p>We have replied to your support ticket <strong style="color:#f0f0ff">#${String(ticketId).slice(0,8)}</strong>.</p>
+        <div class="alert-box" style="background:rgba(124,106,255,.07);border:1px solid rgba(124,106,255,.15)">
+          <p style="margin:0 0 6px;font-size:11px;color:#505080;text-transform:uppercase;letter-spacing:.8px">Subject: ${subject}</p>
+          <p style="margin:0;color:#f0f0ff;font-size:14px;line-height:1.7;white-space:pre-wrap">${reply}</p>
+        </div>
+        <p class="note">Need more help? Reply to this email or visit <a href="https://valcrown.com/contact.html">our support page</a>.</p>
+      `
+    }),
+    text: 'Hi ' + (name||'there') + ',
+
+We replied to your ticket #' + String(ticketId).slice(0,8) + ':
+
+' + reply + '
+
+ValCrown Support'
+  };
+}
+
 module.exports = { resetPassword, welcome, licenseKey, trialExpiry, ticketConfirmation, ticketReply };
